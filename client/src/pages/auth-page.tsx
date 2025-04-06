@@ -8,8 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Redirect, useLocation } from "wouter";
 import { Loader2, HelpCircle, LogIn } from "lucide-react";
-import logoImage from "@/assets/logo.png";
-import suvarnaDashboard from "@/assets/suvarna_logo.png";
+import suvarnaLogo from "@/assets/suvarna_logo_new.png";
 
 export default function AuthPage() {
   const { user, loginMutation } = useAuth();
@@ -40,15 +39,16 @@ export default function AuthPage() {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#1976d2] mb-3">Mortuary Management System</h1>
             <div className="flex justify-center mb-3">
-              <div style={{ width: '120px', height: '50px', position: 'relative', overflow: 'visible' }}>
+              <div className="h-14 relative mx-auto">
                 <img 
-                  src={suvarnaDashboard} 
+                  src={suvarnaLogo} 
                   alt="Suvarna Logo" 
                   style={{ 
-                    width: '100%', 
-                    height: '100%', 
+                    width: 'auto',
+                    height: '100%',
+                    maxWidth: '120px',
                     objectFit: 'contain',
-                    objectPosition: 'left'
+                    imageRendering: 'crisp-edges'
                   }} 
                 />
               </div>

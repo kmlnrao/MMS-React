@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { User as UserType } from "@shared/schema";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import suvarnaLogo from "@/assets/suvarna_logo_new.png";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -34,6 +35,19 @@ export default function Header({ toggleSidebar, user }: HeaderProps) {
       <button className="md:hidden mr-4" onClick={toggleSidebar}>
         <Menu className="w-6 h-6 text-[#1976d2]" />
       </button>
+      
+      <div className="h-10 w-auto mr-4 hidden md:block">
+        <img 
+          src={suvarnaLogo} 
+          alt="Suvarna Logo"
+          className="h-full w-auto" 
+          style={{ 
+            maxWidth: '50px',
+            objectFit: 'contain',
+            imageRendering: 'crisp-edges'
+          }}
+        />
+      </div>
       
       <div className="relative flex-grow max-w-md">
         <Input 
