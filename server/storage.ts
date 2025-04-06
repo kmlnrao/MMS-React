@@ -441,7 +441,7 @@ export class DatabaseStorage implements IStorage {
     const recentRegistrations = await db
       .select()
       .from(deceasedPatients)
-      .orderBy(desc(deceasedPatients.registrationDate))
+      .orderBy(sql`${deceasedPatients.registrationDate} DESC`)
       .limit(5);
     
     // Get pending tasks
@@ -449,7 +449,11 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(tasks)
       .where(eq(tasks.status, "pending"))
-      .orderBy([desc(tasks.priority), asc(tasks.dueDate)])
+      .orderBy(sql`CASE 
+        WHEN ${tasks.priority} = 'high' THEN 1 
+        WHEN ${tasks.priority} = 'medium' THEN 2 
+        ELSE 3 
+      END, ${tasks.dueDate} ASC`)
       .limit(4);
     
     // Get active alerts
@@ -465,7 +469,11 @@ export class DatabaseStorage implements IStorage {
           )
         )
       )
-      .orderBy([desc(systemAlerts.severity), desc(systemAlerts.createdAt)])
+      .orderBy(sql`CASE 
+        WHEN ${systemAlerts.severity} = 'critical' THEN 1 
+        WHEN ${systemAlerts.severity} = 'warning' THEN 2 
+        ELSE 3 
+      END, ${systemAlerts.createdAt} DESC`)
       .limit(3);
     
     return {
