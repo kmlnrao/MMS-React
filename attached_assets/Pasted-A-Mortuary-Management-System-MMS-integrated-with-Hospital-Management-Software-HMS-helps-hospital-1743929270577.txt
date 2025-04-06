@@ -1,0 +1,99 @@
+A Mortuary Management System (MMS) integrated with Hospital Management Software (HMS) helps hospitals efficiently track, manage, and document deceased patients while ensuring compliance with legal and ethical guidelines. Below are the key features and integration points of a Mortuary Management Module:
+
+
+---
+
+1. Deceased Patient Registration & Identification
+
+Automatic registration of deceased patients from hospital wards, ICUs, or emergency rooms.
+
+Unique identification number (tagging using barcode/RFID) for each deceased.
+
+Recording of date, time, and cause of death as per medical records.
+
+Attachment of medical reports, death certificates, and legal documents.
+
+
+
+---
+
+2. Body Storage & Management
+
+Automated allocation of morgue compartments based on availability.
+
+Temperature monitoring & alerts for storage units.
+
+Time-based tracking to monitor storage duration.
+
+Customizable retention policies based on hospital protocols.
+
+
+
+---
+
+3. Postmortem & Autopsy Management
+
+Scheduling of postmortem examinations and assigning medical examiners.
+
+Documentation of findings, images, and reports.
+
+Integration with forensic pathology departments.
+
+Chain of custody tracking for legal and investigation cases.
+
+
+
+---
+
+4. Body Release & Handover Process
+
+Approval workflow for body release (hospital, legal authorities, family).
+
+Verification of next of kin identity before release.
+
+Digital signatures & e-documentation for body handover.
+
+Funeral service coordination (integration with funeral homes).
+
+
+
+---
+
+5. Unclaimed Body Handling & Legal Compliance
+
+Tracking of unclaimed bodies with automated notifications to authorities.
+
+Integration with police & legal departments for missing persons matching.
+
+Compliance reports for health & municipal regulations.
+
+Automated notifications for storage expiration.
+
+
+
+---
+
+6. Reporting & Documentation
+
+Daily, weekly, and monthly morgue occupancy reports.
+
+Cause of death statistics & analytics for hospital management.
+
+Legal documentation & compliance tracking.
+
+Audit logs for all transactions & actions in the mortuary.
+
+
+
+---
+
+7. Integration with Hospital Management Software (HMS)
+
+Linked with patient records & billing systems (mortuary charges, postmortem fees).
+
+Integration with security & access control systems (restricted access for staff).
+
+Communication with next of kin through automated SMS/email alerts.
+
+Data sharing with law enforcement & forensic departments when needed.
+
