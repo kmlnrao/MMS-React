@@ -10,15 +10,12 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   fullName: text("full_name").notNull(),
   email: text("email").notNull(),
-  role: text("role").notNull().$type<"admin" | "medical_staff" | "mortuary_staff">(),
+  role: text("role").notNull().$type<"admin" | "medical_staff" | "mortuary_staff" | "viewer">(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
-  deceasedRegistrations: many(deceasedPatients),
-  postmortems: many(postmortems),
-  bodyReleases: many(bodyReleaseRequests),
-}));
+// User relations are defined after all tables have been declared to avoid reference errors
+// See bottom of file for usersRelations
 
 // ==================== Deceased Patients ====================
 export const deceasedPatients = pgTable("deceased_patients", {
@@ -38,24 +35,8 @@ export const deceasedPatients = pgTable("deceased_patients", {
   documents: jsonb("documents").$type<string[]>(),
 });
 
-export const deceasedPatientsRelations = relations(deceasedPatients, ({ one, many }) => ({
-  registeredBy: one(users, {
-    fields: [deceasedPatients.registeredById],
-    references: [users.id],
-  }),
-  storageAssignment: one(storageAssignments, {
-    fields: [deceasedPatients.id],
-    references: [storageAssignments.deceasedId],
-  }),
-  postmortem: one(postmortems, {
-    fields: [deceasedPatients.id],
-    references: [postmortems.deceasedId]
-  }),
-  releaseRequest: one(bodyReleaseRequests, {
-    fields: [deceasedPatients.id],
-    references: [bodyReleaseRequests.deceasedId]
-  }),
-}));
+// Deceased patient relations are defined after all tables have been declared to avoid reference errors
+// See bottom of file for deceasedPatientsRelations
 
 // ==================== Storage Units ====================
 export const storageUnits = pgTable("storage_units", {
@@ -68,9 +49,8 @@ export const storageUnits = pgTable("storage_units", {
   notes: text("notes"),
 });
 
-export const storageUnitsRelations = relations(storageUnits, ({ many }) => ({
-  assignments: many(storageAssignments),
-}));
+// Storage unit relations are defined after all tables have been declared to avoid reference errors
+// See bottom of file for storageUnitsRelations
 
 // ==================== Storage Assignments ====================
 export const storageAssignments = pgTable("storage_assignments", {
@@ -257,3 +237,37 @@ export const insertSystemAlertSchema = createInsertSchema(systemAlerts)
   .omit({ id: true, createdAt: true, acknowledgedAt: true, resolvedAt: true });
 export type InsertSystemAlert = z.infer<typeof insertSystemAlertSchema>;
 export type SystemAlert = typeof systemAlerts.$inferSelect;
+
+// ==================== Relations that needed to be defined after all tables ====================
+
+// Define user relations after all tables are created
+export const usersRelations = relations(users, ({ many }) => ({
+  deceasedRegistrations: many(deceasedPatients),
+  postmortems: many(postmortems),
+  bodyReleases: many(bodyReleaseRequests),
+}));
+
+// Define deceased patient relations after all tables are created
+export const deceasedPatientsRelations = relations(deceasedPatients, ({ one, many }) => ({
+  registeredBy: one(users, {
+    fields: [deceasedPatients.registeredById],
+    references: [users.id],
+  }),
+  storageAssignment: one(storageAssignments, {
+    fields: [deceasedPatients.id],
+    references: [storageAssignments.deceasedId],
+  }),
+  postmortem: one(postmortems, {
+    fields: [deceasedPatients.id],
+    references: [postmortems.deceasedId]
+  }),
+  releaseRequest: one(bodyReleaseRequests, {
+    fields: [deceasedPatients.id],
+    references: [bodyReleaseRequests.deceasedId]
+  }),
+}));
+
+// Define storage units relations after all tables are created
+export const storageUnitsRelations = relations(storageUnits, ({ many }) => ({
+  assignments: many(storageAssignments),
+}));

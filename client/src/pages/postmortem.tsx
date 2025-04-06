@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import AppLayout from "@/components/layout/app-layout";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-export default function Postmortem() {
+export default function PostmortemPage() {
   const { toast } = useToast();
   const [showScheduleDialog, setShowScheduleDialog] = useState(false);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
