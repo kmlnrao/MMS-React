@@ -38,7 +38,18 @@ export default function AuthPage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-3">
-              <img src={logoImage} alt="Suvarna Logo" className="h-20 w-auto" style={{ minWidth: '60px' }} />
+              <div style={{ width: '100px', height: '120px', position: 'relative', overflow: 'visible' }}>
+                <img 
+                  src={logoImage} 
+                  alt="Suvarna Logo" 
+                  style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'contain',
+                    objectPosition: 'center'
+                  }} 
+                />
+              </div>
             </div>
             <h1 className="text-3xl font-bold text-primary">Mortuary Management System</h1>
             <p className="text-gray-600 mt-2">Sign in to access the system</p>
