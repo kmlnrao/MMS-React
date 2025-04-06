@@ -7,7 +7,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Redirect, useLocation } from "wouter";
-import { Loader2, Building, HelpCircle, LogIn } from "lucide-react";
+import { Loader2, HelpCircle, LogIn } from "lucide-react";
+import logoImage from "@/assets/logo.png";
 
 export default function AuthPage() {
   const { user, loginMutation } = useAuth();
@@ -37,7 +38,7 @@ export default function AuthPage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-3">
-              <Building className="h-12 w-12 text-primary" />
+              <img src={logoImage} alt="Suvarna Logo" className="h-16" />
             </div>
             <h1 className="text-3xl font-bold text-primary">Mortuary Management System</h1>
             <p className="text-gray-600 mt-2">Sign in to access the system</p>

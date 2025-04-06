@@ -1,6 +1,5 @@
 import { Link, useLocation } from "wouter";
 import { 
-  Building,
   BarChart4, 
   UserPlus, 
   PackageCheck, 
@@ -14,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { User } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
+import logoImage from "@/assets/logo.png";
 
 interface SidebarProps {
   open: boolean;
@@ -52,7 +52,7 @@ export default function Sidebar({ open, user }: SidebarProps) {
     )}>
       <div className="flex flex-col h-full">
         <div className="px-4 py-5 flex items-center border-b border-secondary">
-          <Building className="w-8 h-8 text-white mr-2" />
+          <img src={logoImage} alt="Suvarna Logo" className="h-8 mr-2" />
           <h1 className="text-white text-xl font-medium">MMS</h1>
         </div>
         <nav className="flex-grow py-4 overflow-y-auto">
