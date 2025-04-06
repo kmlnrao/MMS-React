@@ -21,7 +21,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-[#f5f9ff]">
       {/* Sidebar */}
       <Sidebar open={sidebarOpen} user={user} />
       
@@ -30,14 +30,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <Header toggleSidebar={toggleSidebar} user={user} />
         
         {/* Content area */}
-        <main className="flex-grow overflow-y-auto p-6 bg-neutral-light">
-          {children}
+        <main className="flex-grow overflow-y-auto p-6">
+          <div className="mx-auto max-w-7xl">
+            {children}
+          </div>
         </main>
 
         {/* Footer with copyright */}
-        <footer className="py-4 px-6 bg-white border-t border-neutral-medium text-center text-sm text-muted-foreground">
-          <p>&copy; {getCurrentYear()} - Suvarna Technosoft Pvt Ltd all rights reserved.</p>
-          <p>&#8902; All Images and Logos are Copyright of Respective Owners.</p>
+        <footer className="py-3 px-6 bg-white border-t border-[#e3f2fd] text-center text-sm text-[#64b5f6]">
+          <p className="text-[#1976d2]">&copy; {getCurrentYear()} - Suvarna Technosoft Pvt Ltd all rights reserved.</p>
+          <p className="text-xs mt-1">&#8902; All Images and Logos are Copyright of Respective Owners.</p>
         </footer>
       </div>
     </div>

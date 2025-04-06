@@ -8,12 +8,13 @@ import {
   Settings, 
   AlertTriangle, 
   FileText, 
-  Users
+  Users,
+  ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { User } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
-import logoImage from "@/assets/logo.png";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface SidebarProps {
   open: boolean;
@@ -35,71 +36,90 @@ export default function Sidebar({ open, user }: SidebarProps) {
       <Link 
         href={href} 
         className={cn(
-          "flex items-center px-4 py-3 transition-colors duration-200", 
+          "flex items-center rounded-md mx-2 px-3 py-2.5 transition-all duration-200 group", 
           isActive 
-            ? "bg-[rgba(30,136,229,0.25)] text-white border-l-4 border-[#e3f2fd]" 
-            : "text-[#e3f2fd] hover:bg-[rgba(30,136,229,0.15)] hover:text-white"
+            ? "bg-[#e3f2fd] text-[#1565c0] font-medium" 
+            : "text-[#1565c0] hover:bg-[#e3f2fd] hover:bg-opacity-70"
         )}
       >
-        <Icon className={cn("w-5 h-5 mr-3", isActive ? "text-white" : "text-[#90caf9]")} />
-        {text}
+        <Icon className={cn("w-5 h-5 mr-3", isActive ? "text-[#1976d2]" : "text-[#42a5f5]")} />
+        <span>{text}</span>
+        {isActive && <ChevronRight className="w-4 h-4 ml-auto text-[#1976d2]" />}
       </Link>
     );
   };
 
   return (
-    <aside className={cn(
-      "bg-[#1976d2] w-64 flex-shrink-0 transition-all duration-300 ease-in-out transform shadow-lg",
-      open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-    )}>
-      <div className="flex flex-col h-full">
-        <div className="px-4 py-5 flex items-center border-b border-[rgba(255,255,255,0.2)]">
-          <div style={{ width: '45px', height: '45px', position: 'relative', overflow: 'visible', marginRight: '12px' }}>
-            <img 
-              src={logoImage} 
-              alt="Suvarna Logo"
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'contain',
-                objectPosition: 'center',
-                display: 'block'
-              }} 
-            />
+    <TooltipProvider>
+      <aside className={cn(
+        "bg-white w-64 flex-shrink-0 transition-all duration-300 ease-in-out transform shadow-md border-r border-[#e3f2fd]",
+        open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      )}>
+        <div className="flex flex-col h-full">
+          <div className="px-4 py-5 flex items-center border-b border-[#e3f2fd]">
+            <div className="h-12 w-auto mr-3">
+              <img 
+                src="/logo.png" 
+                alt="Suvarna Logo"
+                className="h-full w-auto object-contain" 
+                style={{ maxWidth: '40px' }}
+              />
+            </div>
+            <div>
+              <h1 className="text-[#1565c0] text-xl font-semibold leading-tight">MMS</h1>
+              <p className="text-xs text-[#64b5f6]">Mortuary Management System</p>
+            </div>
           </div>
-          <h1 className="text-white text-xl font-medium">MMS</h1>
-        </div>
-        <nav className="flex-grow py-4 overflow-y-auto">
-          <div className="px-4 mb-2 text-sm text-[#e3f2fd] uppercase tracking-wider font-medium">Dashboard</div>
-          <LinkItem href="/" icon={BarChart4} text="Dashboard" />
+
+          <div className="py-1.5 px-3 my-2 mx-3 bg-[#f5f9ff] rounded-md">
+            <p className="text-xs text-[#1976d2] font-medium">
+              {user ? `Logged in as: ${user.fullName}` : 'Not logged in'}
+            </p>
+            <p className="text-xs text-[#64b5f6]">
+              {user?.role ? user.role.replace('_', ' ') : ''}
+            </p>
+          </div>
           
-          <div className="px-4 mt-6 mb-2 text-sm text-[#e3f2fd] uppercase tracking-wider font-medium">Main Functions</div>
-          <LinkItem href="/registration" icon={UserPlus} text="Registration" />
-          <LinkItem href="/storage" icon={PackageCheck} text="Storage Management" />
-          <LinkItem href="/postmortem" icon={FileCheck} text="Postmortem" />
-          <LinkItem href="/release" icon={LogOut} text="Body Release" />
-          <LinkItem href="/unclaimed" icon={AlertTriangle} text="Unclaimed Bodies" />
+          <nav className="flex-grow py-4 overflow-y-auto">
+            <div className="px-4 mb-2 text-xs text-[#90caf9] uppercase tracking-wider font-medium">Dashboard</div>
+            <LinkItem href="/" icon={BarChart4} text="Dashboard" />
+            
+            <div className="px-4 mt-6 mb-2 text-xs text-[#90caf9] uppercase tracking-wider font-medium">Main Functions</div>
+            <LinkItem href="/registration" icon={UserPlus} text="Registration" />
+            <LinkItem href="/storage" icon={PackageCheck} text="Storage Management" />
+            <LinkItem href="/postmortem" icon={FileCheck} text="Postmortem" />
+            <LinkItem href="/release" icon={LogOut} text="Body Release" />
+            <LinkItem href="/unclaimed" icon={AlertTriangle} text="Unclaimed Bodies" />
+            
+            <div className="px-4 mt-6 mb-2 text-xs text-[#90caf9] uppercase tracking-wider font-medium">Administration</div>
+            <LinkItem href="/reports" icon={FileText} text="Reports" />
+            {user && (user.role === "admin" || user.role === "mortuary_staff") && (
+              <LinkItem href="/settings" icon={Settings} text="Settings" />
+            )}
+            {user && user.role === "admin" && (
+              <LinkItem href="/users" icon={Users} text="User Management" />
+            )}
+          </nav>
           
-          <div className="px-4 mt-6 mb-2 text-sm text-[#e3f2fd] uppercase tracking-wider font-medium">Administration</div>
-          <LinkItem href="/reports" icon={FileText} text="Reports" />
-          {user && (user.role === "admin" || user.role === "mortuary_staff") && (
-            <LinkItem href="/settings" icon={Settings} text="Settings" />
-          )}
-          {user && user.role === "admin" && (
-            <LinkItem href="/users" icon={Users} text="User Management" />
-          )}
-        </nav>
-        <div className="px-4 py-4 border-t border-[rgba(255,255,255,0.2)]">
-          <button 
-            onClick={handleLogout}
-            className="flex items-center text-[#e3f2fd] hover:text-white transition-colors duration-200"
-            disabled={logoutMutation.isPending}
-          >
-            <LogOut className="w-5 h-5 mr-3" />
-            {logoutMutation.isPending ? "Logging out..." : "Logout"}
-          </button>
+          <div className="mt-auto px-3 py-4 border-t border-[#e3f2fd]">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center text-[#ef5350] hover:text-[#f44336] hover:bg-[#ffebee] w-full rounded-md px-3 py-2 transition-colors duration-200"
+                  disabled={logoutMutation.isPending}
+                >
+                  <LogOut className="w-5 h-5 mr-3" />
+                  {logoutMutation.isPending ? "Signing out..." : "Sign out"}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Sign out from the system</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </TooltipProvider>
   );
 }
