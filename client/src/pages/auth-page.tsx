@@ -32,7 +32,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="flex h-screen bg-neutral-light">
+    <div className="flex h-screen bg-[#f5f9ff]">
       {/* Left Column - Auth Form */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
@@ -51,23 +51,24 @@ export default function AuthPage() {
                 />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-primary">Mortuary Management System</h1>
-            <p className="text-gray-600 mt-2">Sign in to access the system</p>
+            <h1 className="text-3xl font-bold text-[#1976d2]">Mortuary Management System</h1>
+            <p className="text-[#546e7a] mt-2">Sign in to access the system</p>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl text-center">Login</CardTitle>
+          <Card className="border-[#bbdefb] shadow-lg">
+            <CardHeader className="bg-[#e3f2fd] border-b border-[#bbdefb]">
+              <CardTitle className="text-xl text-center text-[#0d47a1]">Login</CardTitle>
             </CardHeader>
-            <CardContent className="pt-4">
+            <CardContent className="pt-6">
               <form onSubmit={loginForm.handleSubmit(onLoginSubmit)}>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username" className="text-[#1976d2] font-medium">Username</Label>
                     <Input
                       id="username"
                       type="text"
                       placeholder="Enter your username"
+                      className="border-[#bbdefb] focus:border-[#1e88e5] focus:ring-[#1e88e5]"
                       {...loginForm.register("username")}
                     />
                     {loginForm.formState.errors.username && (
@@ -76,11 +77,12 @@ export default function AuthPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password" className="text-[#1976d2] font-medium">Password</Label>
                     <Input
                       id="password"
                       type="password"
                       placeholder="Enter your password"
+                      className="border-[#bbdefb] focus:border-[#1e88e5] focus:ring-[#1e88e5]"
                       {...loginForm.register("password")}
                     />
                     {loginForm.formState.errors.password && (
@@ -90,7 +92,7 @@ export default function AuthPage() {
 
                   <Button
                     type="submit"
-                    className="w-full bg-primary hover:bg-primary/90"
+                    className="w-full bg-[#1976d2] hover:bg-[#1565c0] text-white"
                     disabled={loginMutation.isPending}
                   >
                     {loginMutation.isPending ? (
@@ -101,21 +103,21 @@ export default function AuthPage() {
                     Sign In
                   </Button>
                   
-                  <div className="text-center text-sm text-muted-foreground mt-4">
+                  <div className="text-center text-sm text-[#546e7a] mt-4">
                     <p>Need access? Contact your system administrator.</p>
                     <p className="mt-1">User accounts can only be created by administrators.</p>
                   </div>
 
-                  <div className="mt-6 p-3 bg-muted rounded-md">
-                    <h4 className="font-medium text-sm mb-1">Demo Credentials:</h4>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div>
-                        <p><span className="font-semibold">Admin:</span></p>
+                  <div className="mt-6 p-4 bg-[#e3f2fd] rounded-md border border-[#bbdefb]">
+                    <h4 className="font-medium text-sm mb-2 text-[#0d47a1]">Demo Credentials:</h4>
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div className="bg-white p-2 rounded border border-[#bbdefb]">
+                        <p><span className="font-semibold text-[#1976d2]">Admin:</span></p>
                         <p>Username: admin</p>
                         <p>Password: admin123</p>
                       </div>
-                      <div>
-                        <p><span className="font-semibold">Staff:</span></p>
+                      <div className="bg-white p-2 rounded border border-[#bbdefb]">
+                        <p><span className="font-semibold text-[#1976d2]">Staff:</span></p>
                         <p>Username: mortuary</p>
                         <p>Password: mortuary123</p>
                       </div>
@@ -125,59 +127,68 @@ export default function AuthPage() {
               </form>
             </CardContent>
           </Card>
+          
+          <div className="text-center mt-6 text-sm text-[#607d8b]">
+            <p>© 2025 Suvarna. All rights reserved.</p>
+          </div>
         </div>
       </div>
 
       {/* Right Column - Hero/Info Section */}
-      <div className="hidden lg:flex lg:flex-1 bg-primary p-8 text-white flex-col justify-center">
+      <div className="hidden lg:flex lg:flex-1 bg-[#1976d2] p-8 text-white flex-col justify-center">
         <div className="max-w-lg mx-auto">
           <h2 className="text-4xl font-bold mb-6">Hospital Mortuary Management System</h2>
-          <p className="text-lg text-neutral-light mb-8">
+          <p className="text-lg text-[#e3f2fd] mb-8">
             A comprehensive solution for managing deceased patient records, storage allocation, 
             postmortem examinations, and body release processes.
           </p>
           
           <div className="space-y-6">
             <div className="flex items-start">
-              <div className="bg-secondary bg-opacity-30 p-2 rounded-full mr-4">
+              <div className="bg-[rgba(255,255,255,0.15)] p-2 rounded-full mr-4">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                 </svg>
               </div>
               <div>
                 <h3 className="text-xl font-medium mb-1">Secure Record Keeping</h3>
-                <p className="text-neutral-light">Maintain detailed and secure records of all deceased patients.</p>
+                <p className="text-[#e3f2fd]">Maintain detailed and secure records of all deceased patients.</p>
               </div>
             </div>
             
             <div className="flex items-start">
-              <div className="bg-secondary bg-opacity-30 p-2 rounded-full mr-4">
+              <div className="bg-[rgba(255,255,255,0.15)] p-2 rounded-full mr-4">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                 </svg>
               </div>
               <div>
                 <h3 className="text-xl font-medium mb-1">Workflow Automation</h3>
-                <p className="text-neutral-light">Streamlined processes for body storage, autopsies, and releases.</p>
+                <p className="text-[#e3f2fd]">Streamlined processes for body storage, autopsies, and releases.</p>
               </div>
             </div>
             
             <div className="flex items-start">
-              <div className="bg-secondary bg-opacity-30 p-2 rounded-full mr-4">
+              <div className="bg-[rgba(255,255,255,0.15)] p-2 rounded-full mr-4">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
               </div>
               <div>
                 <h3 className="text-xl font-medium mb-1">Comprehensive Reporting</h3>
-                <p className="text-neutral-light">Generate detailed reports and statistics for management oversight.</p>
+                <p className="text-[#e3f2fd]">Generate detailed reports and statistics for management oversight.</p>
               </div>
             </div>
           </div>
           
-          <div className="mt-10 flex items-center text-sm">
+          <div className="mt-10 py-4 border-t border-[rgba(255,255,255,0.2)] flex items-center text-sm">
             <HelpCircle className="w-4 h-4 mr-2" />
             <span>Need help? Contact the hospital IT department for assistance.</span>
+          </div>
+          
+          <div className="mt-4 text-center text-xs text-[#e3f2fd]">
+            <p>© 2025 Suvarna Technologies. All rights reserved.</p>
+            <p className="mt-1">Powered by Suvarna HMS Integration Platform.</p>
           </div>
         </div>
       </div>

@@ -10,4 +10,38 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
+  
+  /* Custom styles for light blue professional theme */
+  .bg-primary {
+    @apply bg-[#1e88e5] !important;
+  }
+  
+  .text-primary {
+    @apply text-[#1e88e5] !important;
+  }
+  
+  .border-primary {
+    @apply border-[#1e88e5] !important;
+  }
+  
+  .hover\:bg-primary:hover {
+    @apply bg-[#1976d2] !important;
+  }
+  
+  .active\:bg-primary:active {
+    @apply bg-[#1565c0] !important;
+  }
+  
+  .btn-primary {
+    @apply bg-[#1e88e5] text-white hover:bg-[#1976d2] active:bg-[#1565c0] !important;
+  }
+  
+  /* Additional theme elements */
+  .card {
+    @apply shadow-md hover:shadow-lg transition-shadow duration-300;
+  }
+  
+  .sidebar-link.active {
+    @apply bg-[rgba(30,136,229,0.15)] text-[#1e88e5] border-l-4 border-[#1e88e5];
+  }
 }
