@@ -52,7 +52,7 @@ export default function Sidebar({ open, user }: SidebarProps) {
     )}>
       <div className="flex flex-col h-full">
         <div className="px-4 py-5 flex items-center border-b border-secondary">
-          <img src={logoImage} alt="Suvarna Logo" className="h-8 mr-2" />
+          <img src={logoImage} alt="Suvarna Logo" className="h-10 w-auto mr-2" style={{ minWidth: '40px' }} />
           <h1 className="text-white text-xl font-medium">MMS</h1>
         </div>
         <nav className="flex-grow py-4 overflow-y-auto">
