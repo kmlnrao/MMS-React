@@ -39,7 +39,7 @@ export default function AuthPage() {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#1976d2] mb-3">Mortuary Management System</h1>
             <div className="flex justify-center mb-3">
-              <div style={{ width: '100px', height: '120px', position: 'relative', overflow: 'visible' }}>
+              <div style={{ width: '80px', height: '80px', position: 'relative', overflow: 'visible' }}>
                 <img 
                   src={logoImage} 
                   alt="Suvarna Logo" 
