@@ -46,6 +46,7 @@ try {
   console.error('CRITICAL ERROR IN MAIN.TSX:', err);
   // Try to display the error
   if (document.body) {
-    document.body.innerHTML = `<div style="color:red;padding:20px;">Critical error: ${err?.message || 'Unknown error'}</div>`;
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    document.body.innerHTML = `<div style="color:red;padding:20px;">Critical error: ${errorMessage}</div>`;
   }
 }
