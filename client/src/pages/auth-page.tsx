@@ -37,6 +37,7 @@ export default function AuthPage() {
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-[#1976d2] mb-3">Mortuary Management System</h1>
             <div className="flex justify-center mb-3">
               <div style={{ width: '100px', height: '120px', position: 'relative', overflow: 'visible' }}>
                 <img 
@@ -51,7 +52,6 @@ export default function AuthPage() {
                 />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-[#1976d2]">Mortuary Management System</h1>
             <p className="text-[#546e7a] mt-2">Sign in to access the system</p>
           </div>
 
