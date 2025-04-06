@@ -25,18 +25,34 @@ export default function StatCard({
   changeType = "neutral",
   color 
 }: StatCardProps) {
+  const getIconColor = () => {
+    switch (color) {
+      case "accent":
+        return "text-[#1976d2]";
+      case "success":
+        return "text-[#4caf50]";
+      case "warning":
+        return "text-[#ff9800]";
+      case "error":
+        return "text-[#f44336]";
+      default:
+        return "text-[#1976d2]";
+    }
+  };
+
   const getIcon = () => {
+    const colorClass = getIconColor();
     switch (icon) {
       case "document":
-        return <FileText className={`w-8 h-8 text-${color}`} />;
+        return <FileText className={`w-8 h-8 ${colorClass}`} />;
       case "chart":
-        return <BarChart3 className={`w-8 h-8 text-${color}`} />;
+        return <BarChart3 className={`w-8 h-8 ${colorClass}`} />;
       case "clock":
-        return <Clock className={`w-8 h-8 text-${color}`} />;
+        return <Clock className={`w-8 h-8 ${colorClass}`} />;
       case "alert":
-        return <AlertTriangle className={`w-8 h-8 text-${color}`} />;
+        return <AlertTriangle className={`w-8 h-8 ${colorClass}`} />;
       default:
-        return <FileText className={`w-8 h-8 text-${color}`} />;
+        return <FileText className={`w-8 h-8 ${colorClass}`} />;
     }
   };
 
@@ -54,17 +70,32 @@ export default function StatCard({
   const getChangeColor = () => {
     switch (changeType) {
       case "increase":
-        return "text-success";
+        return "text-[#4caf50]";
       case "decrease":
-        return "text-error";
+        return "text-[#f44336]";
       default:
-        return "text-warning";
+        return "text-[#ff9800]";
+    }
+  };
+
+  const getBgColor = () => {
+    switch (color) {
+      case "accent":
+        return "bg-[#e3f2fd]";
+      case "success":
+        return "bg-[#e8f5e9]";
+      case "warning":
+        return "bg-[#fff3e0]";
+      case "error":
+        return "bg-[#ffebee]";
+      default:
+        return "bg-[#e3f2fd]";
     }
   };
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 flex items-start">
-      <div className={cn(`p-3 rounded-full bg-${color} bg-opacity-10 mr-4`)}>
+      <div className={cn(`p-3 rounded-full ${getBgColor()} mr-4`)}>
         {getIcon()}
       </div>
       <div>
