@@ -52,7 +52,7 @@ export default function Sidebar({ open, user }: SidebarProps) {
     )}>
       <div className="flex flex-col h-full">
         <div className="px-4 py-5 flex items-center border-b border-secondary">
-          <div style={{ width: '50px', height: '50px', position: 'relative', overflow: 'visible' }}>
+          <div style={{ width: '45px', height: '45px', position: 'relative', overflow: 'visible', marginRight: '12px' }}>
             <img 
               src={logoImage} 
               alt="Suvarna Logo"
@@ -60,7 +60,8 @@ export default function Sidebar({ open, user }: SidebarProps) {
                 width: '100%', 
                 height: '100%', 
                 objectFit: 'contain',
-                objectPosition: 'center'
+                objectPosition: 'center',
+                display: 'block'
               }} 
             />
           </div>
