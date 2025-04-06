@@ -94,6 +94,22 @@ export default function AuthPage() {
                     <p>Need access? Contact your system administrator.</p>
                     <p className="mt-1">User accounts can only be created by administrators.</p>
                   </div>
+
+                  <div className="mt-6 p-3 bg-muted rounded-md">
+                    <h4 className="font-medium text-sm mb-1">Demo Credentials:</h4>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <p><span className="font-semibold">Admin:</span></p>
+                        <p>Username: admin</p>
+                        <p>Password: admin123</p>
+                      </div>
+                      <div>
+                        <p><span className="font-semibold">Staff:</span></p>
+                        <p>Username: mortuary</p>
+                        <p>Password: mortuary123</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </form>
             </CardContent>
