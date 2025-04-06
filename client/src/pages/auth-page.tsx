@@ -1,22 +1,17 @@
-import { useAuth, loginSchema, registerSchema } from "@/hooks/use-auth";
-import { Form } from "@/components/ui/form";
+import { useAuth, loginSchema } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Redirect, useLocation } from "wouter";
-import { useState } from "react";
-import { Loader2, Building, HelpCircle } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, Building, HelpCircle, LogIn } from "lucide-react";
 
 export default function AuthPage() {
-  const { user, loginMutation, registerMutation } = useAuth();
+  const { user, loginMutation } = useAuth();
   const [, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState<string>("login");
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -26,24 +21,8 @@ export default function AuthPage() {
     },
   });
 
-  const registerForm = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-      confirmPassword: "",
-      fullName: "",
-      email: "",
-      role: "medical_staff",
-    },
-  });
-
   const onLoginSubmit = (data: z.infer<typeof loginSchema>) => {
     loginMutation.mutate(data);
-  };
-
-  const onRegisterSubmit = (data: z.infer<typeof registerSchema>) => {
-    registerMutation.mutate(data);
   };
 
   // Redirect if the user is already logged in
@@ -53,7 +32,7 @@ export default function AuthPage() {
 
   return (
     <div className="flex h-screen bg-neutral-light">
-      {/* Left Column - Auth Forms */}
+      {/* Left Column - Auth Form */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
@@ -64,165 +43,60 @@ export default function AuthPage() {
             <p className="text-gray-600 mt-2">Sign in to access the system</p>
           </div>
 
-          <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-2 w-full mb-6">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="register">Register</TabsTrigger>
-            </TabsList>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl text-center">Login</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)}>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Username</Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      placeholder="Enter your username"
+                      {...loginForm.register("username")}
+                    />
+                    {loginForm.formState.errors.username && (
+                      <p className="text-sm text-red-500">{loginForm.formState.errors.username.message}</p>
+                    )}
+                  </div>
 
-            <TabsContent value="login">
-              <Card>
-                <CardContent className="pt-6">
-                  <form onSubmit={loginForm.handleSubmit(onLoginSubmit)}>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="username">Username</Label>
-                        <Input
-                          id="username"
-                          type="text"
-                          placeholder="Enter your username"
-                          {...loginForm.register("username")}
-                        />
-                        {loginForm.formState.errors.username && (
-                          <p className="text-sm text-red-500">{loginForm.formState.errors.username.message}</p>
-                        )}
-                      </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      {...loginForm.register("password")}
+                    />
+                    {loginForm.formState.errors.password && (
+                      <p className="text-sm text-red-500">{loginForm.formState.errors.password.message}</p>
+                    )}
+                  </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                          id="password"
-                          type="password"
-                          placeholder="Enter your password"
-                          {...loginForm.register("password")}
-                        />
-                        {loginForm.formState.errors.password && (
-                          <p className="text-sm text-red-500">{loginForm.formState.errors.password.message}</p>
-                        )}
-                      </div>
-
-                      <Button
-                        type="submit"
-                        className="w-full bg-accent hover:bg-accent-light"
-                        disabled={loginMutation.isPending}
-                      >
-                        {loginMutation.isPending ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : null}
-                        Sign In
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="register">
-              <Card>
-                <CardContent className="pt-6">
-                  <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)}>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="fullName">Full Name</Label>
-                        <Input
-                          id="fullName"
-                          type="text"
-                          placeholder="Enter your full name"
-                          {...registerForm.register("fullName")}
-                        />
-                        {registerForm.formState.errors.fullName && (
-                          <p className="text-sm text-red-500">{registerForm.formState.errors.fullName.message}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="Enter your email"
-                          {...registerForm.register("email")}
-                        />
-                        {registerForm.formState.errors.email && (
-                          <p className="text-sm text-red-500">{registerForm.formState.errors.email.message}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="username">Username</Label>
-                        <Input
-                          id="reg-username"
-                          type="text"
-                          placeholder="Choose a username"
-                          {...registerForm.register("username")}
-                        />
-                        {registerForm.formState.errors.username && (
-                          <p className="text-sm text-red-500">{registerForm.formState.errors.username.message}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="role">Role</Label>
-                        <Select 
-                          defaultValue="medical_staff" 
-                          onValueChange={(value) => registerForm.setValue("role", value as "admin" | "medical_staff" | "mortuary_staff")}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select your role" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="admin">Administrator</SelectItem>
-                            <SelectItem value="medical_staff">Medical Staff</SelectItem>
-                            <SelectItem value="mortuary_staff">Mortuary Staff</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        {registerForm.formState.errors.role && (
-                          <p className="text-sm text-red-500">{registerForm.formState.errors.role.message}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                          id="reg-password"
-                          type="password"
-                          placeholder="Create a password"
-                          {...registerForm.register("password")}
-                        />
-                        {registerForm.formState.errors.password && (
-                          <p className="text-sm text-red-500">{registerForm.formState.errors.password.message}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword">Confirm Password</Label>
-                        <Input
-                          id="confirmPassword"
-                          type="password"
-                          placeholder="Confirm your password"
-                          {...registerForm.register("confirmPassword")}
-                        />
-                        {registerForm.formState.errors.confirmPassword && (
-                          <p className="text-sm text-red-500">{registerForm.formState.errors.confirmPassword.message}</p>
-                        )}
-                      </div>
-
-                      <Button
-                        type="submit"
-                        className="w-full bg-accent hover:bg-accent-light"
-                        disabled={registerMutation.isPending}
-                      >
-                        {registerMutation.isPending ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : null}
-                        Register
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                  <Button
+                    type="submit"
+                    className="w-full bg-primary hover:bg-primary/90"
+                    disabled={loginMutation.isPending}
+                  >
+                    {loginMutation.isPending ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <LogIn className="mr-2 h-4 w-4" />
+                    )}
+                    Sign In
+                  </Button>
+                  
+                  <div className="text-center text-sm text-muted-foreground mt-4">
+                    <p>Need access? Contact your system administrator.</p>
+                    <p className="mt-1">User accounts can only be created by administrators.</p>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </div>
 

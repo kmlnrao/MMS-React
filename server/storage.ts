@@ -35,9 +35,12 @@ export interface IStorage {
   sessionStore: Store;
 
   // User operations
+  getAllUsers(): Promise<User[]>;
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, data: Partial<InsertUser>): Promise<User>;
+  deleteUser(id: number): Promise<void>;
   
   // Deceased patients operations
   getAllDeceasedPatients(): Promise<DeceasedPatient[]>;
@@ -106,6 +109,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   // ==================== User Methods ====================
+  async getAllUsers(): Promise<User[]> {
+    return db.select().from(users).orderBy(asc(users.username));
+  }
+  
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
@@ -122,6 +129,21 @@ export class DatabaseStorage implements IStorage {
       .values(insertUser)
       .returning();
     return user;
+  }
+  
+  async updateUser(id: number, data: Partial<InsertUser>): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set(data)
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser;
+  }
+  
+  async deleteUser(id: number): Promise<void> {
+    await db
+      .delete(users)
+      .where(eq(users.id, id));
   }
 
   // ==================== Deceased Patients Methods ====================

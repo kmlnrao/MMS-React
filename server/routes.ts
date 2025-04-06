@@ -489,6 +489,120 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============= User Management API (Admin Only) =============
+  app.get("/api/users", hasRole(["admin"]), async (req, res, next) => {
+    try {
+      const users = await storage.getAllUsers();
+      
+      // Remove password from response
+      const sanitizedUsers = users.map(user => {
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+      });
+      
+      res.json(sanitizedUsers);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/users", hasRole(["admin"]), async (req, res, next) => {
+    try {
+      const createUserSchema = z.object({
+        username: z.string().min(3),
+        password: z.string().min(6),
+        fullName: z.string(),
+        email: z.string().email(),
+        role: z.enum(["admin", "medical_staff", "mortuary_staff"])
+      });
+      
+      const validation = createUserSchema.safeParse(req.body);
+      
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid request data", errors: validation.error.format() });
+      }
+      
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(validation.data.username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+      
+      const user = await storage.createUser(validation.data);
+      
+      // Remove password from response
+      const { password, ...userWithoutPassword } = user;
+      
+      res.status(201).json(userWithoutPassword);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.patch("/api/users/:id", hasRole(["admin"]), async (req, res, next) => {
+    try {
+      const id = parseInt(req.params.id);
+      const existingUser = await storage.getUser(id);
+      
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const updateUserSchema = z.object({
+        username: z.string().min(3).optional(),
+        password: z.string().min(6).optional(),
+        fullName: z.string().optional(),
+        email: z.string().email().optional(),
+        role: z.enum(["admin", "medical_staff", "mortuary_staff"]).optional()
+      });
+      
+      const validation = updateUserSchema.safeParse(req.body);
+      
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid request data", errors: validation.error.format() });
+      }
+      
+      // Check if username already exists (if changing username)
+      if (validation.data.username && validation.data.username !== existingUser.username) {
+        const existingUserWithUsername = await storage.getUserByUsername(validation.data.username);
+        if (existingUserWithUsername) {
+          return res.status(400).json({ message: "Username already exists" });
+        }
+      }
+      
+      const updatedUser = await storage.updateUser(id, validation.data);
+      
+      // Remove password from response
+      const { password, ...userWithoutPassword } = updatedUser;
+      
+      res.json(userWithoutPassword);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.delete("/api/users/:id", hasRole(["admin"]), async (req, res, next) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Don't allow deleting your own account
+      if (id === req.user!.id) {
+        return res.status(400).json({ message: "You cannot delete your own account" });
+      }
+      
+      const existingUser = await storage.getUser(id);
+      
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      await storage.deleteUser(id);
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
