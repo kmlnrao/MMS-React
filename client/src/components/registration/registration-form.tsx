@@ -83,12 +83,27 @@ export default function RegistrationForm({ onComplete, patientId }: Registration
   // Set form values when editing
   React.useEffect(() => {
     if (existingPatient) {
-      const dateOfDeath = format(new Date(existingPatient.dateOfDeath), "yyyy-MM-dd'T'HH:mm");
-      
-      form.reset({
-        ...existingPatient,
-        dateOfDeath,
-      });
+      try {
+        // Try to format the date properly, with error handling
+        const dateObj = new Date(existingPatient.dateOfDeath);
+        // Check if date is valid before formatting
+        const dateOfDeath = !isNaN(dateObj.getTime()) 
+          ? format(dateObj, "yyyy-MM-dd'T'HH:mm")
+          : format(new Date(), "yyyy-MM-dd'T'HH:mm"); // Fallback to current date/time
+        
+        form.reset({
+          ...existingPatient,
+          dateOfDeath,
+        });
+      } catch (error) {
+        console.error("Error formatting date:", error);
+        // Use current date as fallback if there's an error
+        const currentDate = format(new Date(), "yyyy-MM-dd'T'HH:mm");
+        form.reset({
+          ...existingPatient,
+          dateOfDeath: currentDate,
+        });
+      }
     }
   }, [existingPatient, form]);
   

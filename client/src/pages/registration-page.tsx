@@ -52,7 +52,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogTrigger, 
+  DialogTitle,
+  DialogDescription
+} from "@/components/ui/dialog";
 
 export default function RegistrationPage() {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -260,6 +266,8 @@ export default function RegistrationPage() {
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-3xl">
+                <DialogTitle>Patient Details</DialogTitle>
+                <DialogDescription>Detailed information about the patient</DialogDescription>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -373,6 +381,8 @@ export default function RegistrationPage() {
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-3xl">
+            <DialogTitle>New Patient Registration</DialogTitle>
+            <DialogDescription>Fill in the details to register a deceased patient</DialogDescription>
             <RegistrationForm onComplete={() => setShowNewForm(false)} />
           </DialogContent>
         </Dialog>
@@ -380,6 +390,8 @@ export default function RegistrationPage() {
         {/* Edit Patient Dialog */}
         <Dialog open={showEditForm} onOpenChange={setShowEditForm}>
           <DialogContent className="max-w-3xl">
+            <DialogTitle>Edit Patient Information</DialogTitle>
+            <DialogDescription>Update the deceased patient's details</DialogDescription>
             <RegistrationForm 
               patientId={selectedPatientId!} 
               onComplete={() => {
@@ -393,8 +405,10 @@ export default function RegistrationPage() {
         {/* Postmortem Dialog */}
         <Dialog open={showPostmortemForm} onOpenChange={setShowPostmortemForm}>
           <DialogContent className="max-w-3xl">
+            <DialogTitle>Schedule Postmortem</DialogTitle>
+            <DialogDescription>The patient will be scheduled for a postmortem procedure</DialogDescription>
             <div className="py-6">
-              <h2 className="text-xl font-semibold mb-4">Schedule Postmortem</h2>
+              
               <p className="text-gray-700 mb-6">
                 The selected patient has been marked for postmortem. You will be redirected to the Postmortem page where you can assign a doctor and schedule the procedure.
               </p>
@@ -424,8 +438,9 @@ export default function RegistrationPage() {
         {/* Body Release Dialog */}
         <Dialog open={showReleaseForm} onOpenChange={setShowReleaseForm}>
           <DialogContent className="max-w-3xl">
+            <DialogTitle>Request Body Release</DialogTitle>
+            <DialogDescription>Initiate the process to release the deceased to family members</DialogDescription>
             <div className="py-6">
-              <h2 className="text-xl font-semibold mb-4">Request Body Release</h2>
               <p className="text-gray-700 mb-6">
                 The selected patient has been marked for release. You will be redirected to the Body Release page where you can complete the release process.
               </p>
