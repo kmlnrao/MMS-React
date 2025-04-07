@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import React, { useState } from "react";
 import { DeceasedPatient } from "@shared/schema";
 import { format } from "date-fns";
 import StatusBadge from "@/components/ui/status-badge";
@@ -36,8 +36,14 @@ import {
   Loader2, 
   MoreHorizontal, 
   PlusCircle,
-  Search 
+  Search,
+  Edit,
+  Clipboard,
+  ExternalLink,
+  Printer
 } from "lucide-react"
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,10 +59,154 @@ export default function RegistrationPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [showNewForm, setShowNewForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null);
+  const [showPostmortemForm, setShowPostmortemForm] = useState(false);
+  const [showReleaseForm, setShowReleaseForm] = useState(false);
+  const { toast } = useToast();
   
   const { data: patients, isLoading } = useQuery<DeceasedPatient[]>({
     queryKey: ["/api/patients"],
   });
+
+  // Handle edit patient
+  const handleEditPatient = (patientId: number) => {
+    setSelectedPatientId(patientId);
+    setShowEditForm(true);
+  };
+
+  // Handle schedule postmortem
+  const handleSchedulePostmortem = async (patientId: number) => {
+    try {
+      // First update patient status to pending_autopsy
+      await apiRequest("PATCH", `/api/patients/${patientId}`, {
+        status: "pending_autopsy"
+      });
+      
+      // Then open postmortem form
+      setSelectedPatientId(patientId);
+      setShowPostmortemForm(true);
+      
+      // Invalidate related queries
+      queryClient.invalidateQueries({ queryKey: ["/api/patients"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/dashboard"] });
+      
+      toast({
+        title: "Success",
+        description: "Patient status updated to pending autopsy",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to update patient status: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle request release
+  const handleRequestRelease = async (patientId: number) => {
+    try {
+      // First update patient status to pending_release
+      await apiRequest("PATCH", `/api/patients/${patientId}`, {
+        status: "pending_release"
+      });
+      
+      // Then open release form
+      setSelectedPatientId(patientId);
+      setShowReleaseForm(true);
+      
+      // Invalidate related queries
+      queryClient.invalidateQueries({ queryKey: ["/api/patients"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/dashboard"] });
+      
+      toast({
+        title: "Success", 
+        description: "Patient status updated to pending release",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to update patient status: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle print details
+  const handlePrintDetails = (patient: DeceasedPatient) => {
+    // Create a printable window with patient details
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Patient Details: ${patient.fullName}</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 20px; }
+              h1 { color: #1976d2; }
+              .grid { display: grid; grid-template-columns: 150px auto; gap: 8px; margin-bottom: 15px; }
+              .label { font-weight: bold; color: #666; }
+              .header { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+              .notes { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+              @media print {
+                body { margin: 0; padding: 15px; }
+                button { display: none; }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>Patient Record</h1>
+              <p>Mortuary Management System</p>
+            </div>
+            
+            <div class="grid">
+              <div class="label">Patient ID:</div>
+              <div>${patient.mrNumber}</div>
+              
+              <div class="label">Name:</div>
+              <div>${patient.fullName}</div>
+              
+              <div class="label">Age/Gender:</div>
+              <div>${patient.age}y, ${patient.gender === 'male' ? 'Male' : patient.gender === 'female' ? 'Female' : 'Other'}</div>
+              
+              <div class="label">Date of Death:</div>
+              <div>${format(new Date(patient.dateOfDeath), "MMMM d, yyyy 'at' h:mm a")}</div>
+              
+              <div class="label">Cause of Death:</div>
+              <div>${patient.causeOfDeath}</div>
+              
+              <div class="label">From Ward:</div>
+              <div>${patient.wardFrom}</div>
+              
+              <div class="label">Attending Physician:</div>
+              <div>${patient.attendingPhysician}</div>
+              
+              <div class="label">Status:</div>
+              <div>${patient.status.replace('_', ' ')}</div>
+            </div>
+            
+            <div class="notes">
+              <h3>Notes</h3>
+              <p>${patient.notes || "No notes available for this patient."}</p>
+            </div>
+            
+            <button onclick="window.print()" style="margin-top: 20px; padding: 8px 16px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer;">
+              Print Document
+            </button>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    } else {
+      toast({
+        title: "Error",
+        description: "Could not open print window. Please check your browser settings.",
+        variant: "destructive",
+      });
+    }
+  };
   
   const columns: ColumnDef<DeceasedPatient>[] = [
     {
@@ -164,11 +314,27 @@ export default function RegistrationPage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem>Edit Information</DropdownMenuItem>
-                <DropdownMenuItem>Schedule Postmortem</DropdownMenuItem>
-                <DropdownMenuItem>Request Release</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleEditPatient(patient.id)}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Information
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => handleSchedulePostmortem(patient.id)}
+                  disabled={patient.status === 'pending_autopsy' || patient.status === 'autopsy_completed'}>
+                  <Clipboard className="h-4 w-4 mr-2" />
+                  Schedule Postmortem
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => handleRequestRelease(patient.id)}
+                  disabled={patient.status === 'pending_release' || patient.status === 'released'}>
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Request Release
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Print Details</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handlePrintDetails(patient)}>
+                  <Printer className="h-4 w-4 mr-2" />
+                  Print Details
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -198,6 +364,7 @@ export default function RegistrationPage() {
     <AppLayout>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-medium text-primary">Deceased Patient Registration</h1>
+        {/* New Registration Dialog */}
         <Dialog open={showNewForm} onOpenChange={setShowNewForm}>
           <DialogTrigger asChild>
             <Button className="bg-accent hover:bg-accent-light text-white">
@@ -207,6 +374,81 @@ export default function RegistrationPage() {
           </DialogTrigger>
           <DialogContent className="max-w-3xl">
             <RegistrationForm onComplete={() => setShowNewForm(false)} />
+          </DialogContent>
+        </Dialog>
+        
+        {/* Edit Patient Dialog */}
+        <Dialog open={showEditForm} onOpenChange={setShowEditForm}>
+          <DialogContent className="max-w-3xl">
+            <RegistrationForm 
+              patientId={selectedPatientId!} 
+              onComplete={() => {
+                setShowEditForm(false);
+                setSelectedPatientId(null);
+              }} 
+            />
+          </DialogContent>
+        </Dialog>
+        
+        {/* Postmortem Dialog */}
+        <Dialog open={showPostmortemForm} onOpenChange={setShowPostmortemForm}>
+          <DialogContent className="max-w-3xl">
+            <div className="py-6">
+              <h2 className="text-xl font-semibold mb-4">Schedule Postmortem</h2>
+              <p className="text-gray-700 mb-6">
+                The selected patient has been marked for postmortem. You will be redirected to the Postmortem page where you can assign a doctor and schedule the procedure.
+              </p>
+              <div className="flex justify-end space-x-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setShowPostmortemForm(false);
+                    setSelectedPatientId(null);
+                  }}
+                >
+                  Close
+                </Button>
+                <Button 
+                  onClick={() => {
+                    // Navigate to postmortem page (in a real app, use router here)
+                    window.location.href = "/postmortem";
+                  }}
+                >
+                  Go to Postmortem Management
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+        
+        {/* Body Release Dialog */}
+        <Dialog open={showReleaseForm} onOpenChange={setShowReleaseForm}>
+          <DialogContent className="max-w-3xl">
+            <div className="py-6">
+              <h2 className="text-xl font-semibold mb-4">Request Body Release</h2>
+              <p className="text-gray-700 mb-6">
+                The selected patient has been marked for release. You will be redirected to the Body Release page where you can complete the release process.
+              </p>
+              <div className="flex justify-end space-x-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setShowReleaseForm(false);
+                    setSelectedPatientId(null);
+                  }}
+                >
+                  Close
+                </Button>
+                <Button 
+                  onClick={() => {
+                    // Navigate to body release page (in a real app, use router here)
+                    window.location.href = "/body-release";
+                  }}
+                >
+                  Go to Body Release Management
+                </Button>
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
