@@ -1,5 +1,4 @@
-import { Bell, Menu, Search, Settings, LogOut, UserCircle } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Bell, Menu, Settings, LogOut, UserCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,22 +34,10 @@ export default function Header({ toggleSidebar, user }: HeaderProps) {
         <Menu className="w-6 h-6 text-[#1976d2]" />
       </button>
       
-      <div className="h-10 w-auto mr-4 hidden md:block">
-        <img 
-          src="/logo.png" 
-          alt="Suvarna Logo"
-          className="h-full w-auto object-contain" 
-          style={{ maxWidth: '40px' }}
-        />
-      </div>
-      
-      <div className="relative flex-grow max-w-md">
-        <Input 
-          type="text" 
-          placeholder="Search patients, tasks, or records..." 
-          className="bg-[#f5f9ff] pl-9 pr-4 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-[#1e88e5] border-[#e3f2fd]"
-        />
-        <Search className="w-4 h-4 text-[#64b5f6] absolute left-3 top-3" />
+      <div className="flex-grow">
+        <h1 className="text-[#1565c0] text-xl font-semibold leading-tight hidden md:block">
+          Mortuary Management System
+        </h1>
       </div>
       
       <div className="flex items-center ml-auto space-x-3">
