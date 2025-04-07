@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { User } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import sidebarLogo from "@/assets/suvarna_logo_sidebar.png";
 
 interface SidebarProps {
   open: boolean;
@@ -59,10 +60,10 @@ export default function Sidebar({ open, user }: SidebarProps) {
           <div className="px-4 py-5 flex items-center border-b border-[#e3f2fd]">
             <div className="h-12 w-auto mr-3">
               <img 
-                src="/logo.png" 
+                src={sidebarLogo} 
                 alt="Suvarna Logo"
                 className="h-full w-auto object-contain" 
-                style={{ maxWidth: '40px' }}
+                style={{ maxHeight: '40px' }}
               />
             </div>
             <div>
